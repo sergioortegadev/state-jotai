@@ -1,4 +1,4 @@
-# State Managements (series) - Zustand
+# State Managements (series) - Jōtai
 
 ![screenshot](./readme.png)
 
@@ -22,39 +22,58 @@
 
 <div style="text-align:center">
 
-## [ZUSTAND](https://github.com/pmndrs/zustand)
+## [Jōtai](https://jotai.org/)
 
 </div>
 
 ![zustand web screenshot](./readme-z.png)
 
-## Getting Started (modify)
+## Getting Started
 
 Elementary use:
 
-### First create a store
+### First create atoms
 
 ```javascript
-import { create } from "zustand";
+import { atom } from "jotai";
 
-const useBearStore = create((set) => ({
-  bears: 0,
-  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-  removeAllBears: () => set({ bears: 0 }),
-}));
+const countAtom = atom(0);
 ```
 
-### Then bind your components, and that's it!
+### Use atoms
+
+#### Then use atoms within React components to read or write state.
+
+Like a React useState: const [state, setState] = useState()
 
 ```javascript
-function BearCounter() {
-  const bears = useBearStore((state) => state.bears);
-  return <h1>{bears} around here ...</h1>;
-}
+import { useAtom } from 'jotai'
+import { animeAtom } from './store/atomsStore'
 
-function Controls() {
-  const increasePopulation = useBearStore((state) => state.increasePopulation);
-  return <button onClick={increasePopulation}>one up</button>;
+const AnimeApp = () => {
+  const [anime, setAnime] = useAtom(animeAtom)
+
+return (
+    <>
+      <ul>
+        {anime.map((item) => (
+          <li key={item.title}>{item.title}</li>
+        ))}
+      </ul>
+      <button onClick={() => {
+        setAnime((anime) => [
+          ...anime,
+          {
+            title: 'Cowboy Bebop',
+            year: 1998,
+            watched: false
+          }
+        ])
+      }}>
+        Add Cowboy Bebop
+      </button>
+    <>
+  )
 }
 ```
 
